@@ -1,7 +1,8 @@
 // TODO: import SimpleRx with webpack
 const gitHubURI = 'https://api.github.com/search/users'
 const idSubject = new SimpleRx();
-const limitSubject = new SimpleRx();
+const limitSubject = new SimpleRx(5);
+const renderSubject = new SimpleRx();
 
 function qs(selector) {
   return document.querySelector(selector);
@@ -52,10 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // 공백체크
     if(!target.value) return;
     let query = `${gitHubURI}?q=${target.value}&sort=followers&order=asc`;
-    fetchGet(query).then(({items}) => {console.log(items)});
+    fetchGet(query).then(({items}) => {idSubject.next(items)});
   });
 
-  $list_num_area.onkeyup = debounce((e) => {
+  $list_num_area.onkeyup = debounce(({target}) => {
     //something
+    limitSubject.next(target.value);
   });
+
+  renderSubject.watch((a, b) => {
+    console.log(a.getValue(), b.getValue())}, idSubject, limitSubject);
 })
