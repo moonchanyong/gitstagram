@@ -30,7 +30,7 @@ function fetchGet(uri) {
   .catch(err => { throw new Error(`error in fetchGet ${err}`)})
 }
 
-function debounce(func, wait = 100, immediate = false) {
+function debounce(func, wait = 500, immediate = false) {
 	let timeout;
 	return function() {
 		let context = this;
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   $list_num_area.onkeyup = debounce(({target}) => {
-    //something
+    if(Number.isInteger(target.value) && target.value > 10 && target.value < 1 ) return;
     limitSubject.next(target.value);
   });
 
