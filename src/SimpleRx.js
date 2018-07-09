@@ -1,7 +1,7 @@
 class SimpleRx {
 
   constructor(val) {
-    this.val;
+    this.val = val;
     this._handler = [];
 
     // next, subscribe
@@ -9,6 +9,7 @@ class SimpleRx {
     obj.getValue = this.getValue.bind(this);
     obj.next = this.next.bind(this);
     obj.subscribe = this.subscribe.bind(this);
+    obj.watch = this.watch.bind(this);
     return obj;
   }
 
@@ -25,5 +26,13 @@ class SimpleRx {
 
   subscribe(f) {
     this._handler.push(f);
+  }
+
+  watch(handler, ...args) {
+    args.forEach((subject) => {
+      subject.subscribe(() => {
+        handler(...args);
+      })
+    })
   }
 }
