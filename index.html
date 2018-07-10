@@ -12,16 +12,15 @@
         height: 100px;
       }
 
-      #search-list {
-
-      }
-
       .border-line {
         border-top: 1px solid #ddd;
         border-bottom: 1px solid #ddd;;
       }
 
     </style>
+  <script src="src/simpleRx.js" > </script>
+  <script src="component/item.js"> </script>
+  <script src="component/itemlist.js"></script>
 
   </head>
 
@@ -31,10 +30,12 @@
       <input id="id_area" placeholder="아이디" />
       <input id="list_num_area" value="5" />
     </section>
-    <section id="search-list" class="border-line">
+    <section>
+      <item-list id="custom-list"></item-list>
     </section>
   </body>
 
-<script src="src/simpleRx.js" > </script>
+
 <script src="src/app.js" > </script>
+
 </html>

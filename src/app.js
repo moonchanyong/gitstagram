@@ -1,9 +1,3 @@
-// TODO: import SimpleRx with webpack
-const gitHubURI = 'https://api.github.com/search/users'
-const idSubject = new SimpleRx();
-const limitSubject = new SimpleRx(5);
-const renderSubject = new SimpleRx();
-
 function qs(selector) {
   return document.querySelector(selector);
 }
@@ -49,18 +43,31 @@ function debounce(func, wait = 500, immediate = false) {
 document.addEventListener('DOMContentLoaded', () => {
   const $id_area = qs('#id_area');
   const $list_num_area = qs('#list_num_area');
+  const $custom_list = qs('#custom-list');
+  const gitHubURI = 'https://api.github.com/search/users'
+  const idSubject = new SimpleRx();
+  const limitSubject = new SimpleRx(5);
+  const renderSubject = new SimpleRx();
+
   $id_area.onkeyup = debounce(({target}) => {
-    // 공백체크
     if(!target.value) return;
     let query = `${gitHubURI}?q=${target.value}&sort=followers&order=asc`;
     fetchGet(query).then(({items}) => {idSubject.next(items)});
   });
 
   $list_num_area.onkeyup = debounce(({target}) => {
-    if(Number.isInteger(target.value) && target.value > 10 && target.value < 1 ) return;
-    limitSubject.next(target.value);
+    if(!Number(target.value) || target.value > 10 || target.value < 1 ) return;
+    limitSubject.next(Number(target.value));
   });
 
   renderSubject.watch((a, b) => {
-    console.log(a.getValue(), b.getValue())}, idSubject, limitSubject);
+    $custom_list.dispatchEvent(new CustomEvent('renewData',
+      {
+        detail: {
+          userData: a.getValue(),
+          listNum: b.getValue(),
+        }
+      })
+    );
+  }, idSubject, limitSubject);
 })
