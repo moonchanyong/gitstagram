@@ -1,45 +1,3 @@
-function qs(selector) {
-  return document.querySelector(selector);
-}
-
-function on(el, type, handler, capture) {
-  el.addEventListener(type, handler, !!capture);
-}
-
-function delegate() {
-
-}
-
-function setAtt(el, key, val){
-  el.setAttribute(key, val);
-  return el
-}
-
-function fetchGet(uri) {
-  return fetch(uri, {
-    method: 'GET',
-    mode: 'cors',
-    cache: 'default'
-  }).then(response => response.json())
-  .catch(err => { throw new Error(`error in fetchGet ${err}`)})
-}
-
-function debounce(func, wait = 500, immediate = false) {
-	let timeout;
-	return function() {
-		let context = this;
-    let args = arguments;
-		let later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (immediate && !timeout) func.apply(context, args);
-	};
-};
-
 document.addEventListener('DOMContentLoaded', () => {
   const $id_area = qs('#id_area');
   const $list_num_area = qs('#list_num_area');
@@ -48,11 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const idSubject = new SimpleRx();
   const limitSubject = new SimpleRx(5);
   const renderSubject = new SimpleRx();
-
+  let prevId = '';
   $id_area.onkeyup = debounce(({target}) => {
-    if(!target.value) return;
+    if(!target.value || prevId === target.value) return;
+    prevId = target.value;
     let query = `${gitHubURI}?q=${target.value}&sort=followers&order=asc`;
-    fetchGet(query).then(({items}) => {idSubject.next(items)});
+    fetchGet(query).then(({items}) => {
+      idSubject.next(items);
+    });
   });
 
   $list_num_area.onkeyup = debounce(({target}) => {
@@ -61,13 +22,49 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   renderSubject.watch((a, b) => {
-    $custom_list.dispatchEvent(new CustomEvent('renewData',
-      {
-        detail: {
-          userData: a.getValue(),
-          listNum: b.getValue(),
-        }
-      })
-    );
+    let detail = {}
+    detail['userData'] = a.getValue();
+    detail['listNum'] = b.getValue();
+    $custom_list.dispatchEvent(new CustomEvent('renewData', {detail}));
   }, idSubject, limitSubject);
-})
+
+
+  each(document.querySelectorAll('custom-item'), (component) => {
+  let inner_html = `
+    <img src="${component.avatar_url}" alt="no image" class="inline" />
+    <p id="user-id" class="inline"></p>
+  `
+  let style= `
+    #container {
+      position: relative;
+      white-space:nowrap;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      width: 90vw;
+      height: 10vh;
+      cursor: pointer;
+    }
+
+    img {
+      height: 100%;
+    }
+
+    .inline {
+      display: inline-block;
+    }
+
+    #user-id {
+      position: absolute;
+      top:0;
+      margin: 5px 10px;
+    }
+  `
+    component.setChildElement(inner_html);
+    component.setChildStyle(style);
+    component.update = {
+      avatar_url: (uri)=> { component.shadowRoot.querySelector('img').setAttribute('src',  `${uri}`);},
+      login: (txt) => { component.shadowRoot.querySelector('p').innerText = txt;},
+    }
+  });
+});

@@ -24,31 +24,30 @@ class ItemList extends HTMLElement {
     this.addEventListener('renewData',({detail}) => {
       this.renderRx.next(detail);
     });
-    this.renderRx.subscribe(this.render.bind(this, this.children));
-  }
 
-  each(list, iter) {
-    if(!iter || !list) return;
-    for(let _i = 0; _i < list.length; _i++) {
-      iter(list[_i]);
-    }
+    this.renderRx.subscribe(this.render.bind(this, this.children));
   }
 
   render(componenets, {userData, listNum}) {
     let idx = 0;
+    let noOneImg = `
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3TADqxBVbfLLSKFjp9GJGEHOAtAytI30bSoVHM2ZIVoWnY9WS4g");
+      height: 100vh;
+    `
 
-    this.each(componenets, (component) => {
-      component.style = (listNum > idx)? 'display: block':'display: none';
-      if(listNum > idx) {
-        if (userData.length > idx) {
-          component.setAttribute('avatar_url', userData[idx]['avatar_url']);
-          component.setAttribute('login', userData[idx]['login']);
-        } else {
-          component.setAttribute('avatar_url', this.avatar_url);
-          component.setAttribute('login', 'No Result');
-        }
-        idx++;
+    this.parentElement.style = (!userData.length)?noOneImg:`background-image: none`;
+    each(componenets, (component) => {
+      component.style = (listNum > idx && userData.length > idx)? 'display: block':'display: none';
+      if (userData.length > idx) {
+        component.setAttribute('avatar_url', userData[idx]['avatar_url']);
+        component.setAttribute('login', userData[idx]['login']);
+      } else{
+        component.setAttribute('avatar_url', this.avatar_url);
+        component.setAttribute('login', 'No Result');
       }
+      idx++;
     });
   }
 

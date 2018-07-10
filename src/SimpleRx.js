@@ -4,7 +4,6 @@ class SimpleRx {
     this.val = val;
     this._handler = [];
 
-    // next, subscribe
     let obj = {};
     obj.getValue = this.getValue.bind(this);
     obj.next = this.next.bind(this);
@@ -19,7 +18,6 @@ class SimpleRx {
 
   next(val) {
     this.val = val;
-
     // TODO: 메소드 -> 함수로 변경
     this._handler.forEach((f) => {f(val)});
   }
