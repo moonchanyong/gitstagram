@@ -1,7 +1,9 @@
-document.addEventListener('DOMContentLoaded', () => {
+import CodeSnippet from './codeModule';
 
-  qs('custom-search-bar').renderSubject.subscribe((data) => {
-     qs('item-list').renderRx.next(data);
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('ckpt');
+  CodeSnippet.qs('custom-search-bar').renderSubject.subscribe((data) => {
+     CodeSnippet.qs('item-list').renderRx.next(data);
   });
 
 });

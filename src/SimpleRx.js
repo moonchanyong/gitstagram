@@ -1,5 +1,6 @@
-class SimpleRx {
+import CodeSnippet from './codeModule';
 
+export default class SimpleRx {
   constructor(val) {
     this.val = val;
     this._handler = [];
@@ -19,7 +20,7 @@ class SimpleRx {
   next(val) {
     this.val = val;
     // TODO: 메소드 -> 함수로 변경
-    this._handler.forEach((f) => {f(val)});
+    CodeSnippet.each(this._handler, (f) => {f(val)});
   }
 
   subscribe(f) {
@@ -27,7 +28,7 @@ class SimpleRx {
   }
 
   watch(handler, ...args) {
-    args.forEach((subject) => {
+    CodeSnippet.each(args, (subject) => {
       subject.subscribe(() => {
         handler(...args);
       })
