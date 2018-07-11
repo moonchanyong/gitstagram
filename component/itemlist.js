@@ -3,41 +3,39 @@ class ItemList extends HTMLElement {
     super();
     this.renderRx = new SimpleRx();
     this.avatar_url = 'assets/GitHub-Mark-32px.png';
-  }
-  static get observedAttributes() {
-    return [];
+    this.template = `
+      <custom-item style="display: none"> </custom-item>
+      <custom-item style="display: none"> </custom-item>
+      <custom-item style="display: none"> </custom-item>
+      <custom-item style="display: none"> </custom-item>
+      <custom-item style="display: none"> </custom-item>
+      <custom-item style="display: none"> </custom-item>
+      <custom-item style="display: none"> </custom-item>
+      <custom-item style="display: none"> </custom-item>
+      <custom-item style="display: none"> </custom-item>
+      <custom-item style="display: none"> </custom-item>
+    `
   }
 
   connectedCallback() {
-    this.innerHTML = `
-    <custom-item style="display: none"> </custom-item>
-    <custom-item style="display: none"> </custom-item>
-    <custom-item style="display: none"> </custom-item>
-    <custom-item style="display: none"> </custom-item>
-    <custom-item style="display: none"> </custom-item>
-    <custom-item style="display: none"> </custom-item>
-    <custom-item style="display: none"> </custom-item>
-    <custom-item style="display: none"> </custom-item>
-    <custom-item style="display: none"> </custom-item>
-    <custom-item style="display: none"> </custom-item>
-    `
-    this.addEventListener('renewData',({detail}) => {
-      this.renderRx.next(detail);
-    });
-
+    this.innerHTML = this.template;
     this.renderRx.subscribe(this.render.bind(this, this.children));
+
+    this.addEventListener('click', ({target}) =>  {
+      if(!!target.login)
+      document.body.appendChild(new CustomModal(target.login, target.avatar_url))
+    });
   }
 
   render(componenets, {userData, listNum}) {
     let idx = 0;
     let noOneImg = `
-      background-size: contain;
+      background-position: center;
       background-repeat: no-repeat;
       background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3TADqxBVbfLLSKFjp9GJGEHOAtAytI30bSoVHM2ZIVoWnY9WS4g");
       height: 100vh;
     `
-
-    this.parentElement.style = (!userData.length)?noOneImg:`background-image: none`;
+    this.parentElement.style = (!userData.length)? noOneImg:`background-image: none`;
     each(componenets, (component) => {
       component.style = (listNum > idx && userData.length > idx)? 'display: block':'display: none';
       if (userData.length > idx) {
@@ -49,11 +47,6 @@ class ItemList extends HTMLElement {
       }
       idx++;
     });
-  }
-
-  attributeChangedCallback(attrName, oldVal, newVal) {
-    // 속성이 추가/제거/변경되었다.
-    this[attrName] = newVal;
   }
 }
 

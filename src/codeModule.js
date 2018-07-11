@@ -18,6 +18,12 @@ function each(list, iter) {
   }
 }
 
+function map(list, mapper) {
+  let ret = [];
+  each(list, (item) => {ret.push(mapper(item))});
+  return ret;
+}
+
 function delegate() {
 
 }
