@@ -1,6 +1,9 @@
 import CodeSnippet from '../src/codeModule'
 import SimpleRx from '../src/SimpleRx';
 
+/**
+ * @ko input에 들어오는 값들을 SimpleRx를 통해 제공하는 컴포넌트
+ */
 class CustomSerachBar extends HTMLElement {
   constructor() {
     super();
@@ -42,6 +45,10 @@ class CustomSerachBar extends HTMLElement {
     const $list_num_area = this.shadowRoot.querySelector('#list_num_area');
     let prevId = '';
 
+
+    /**
+     * add input's value EventListener
+     */
     $id_area.onkeyup = CodeSnippet.debounce(({target}) => {
       let val = $id_area.value;
       if(!val || prevId === val) return;
@@ -51,20 +58,20 @@ class CustomSerachBar extends HTMLElement {
         this.idSubject.next(items);
       });
     });
-
     $list_num_area.onkeyup = CodeSnippet.debounce(({target}) => {
       let val = $list_num_area.value;
       if(!Number(val) || val > 10 || val < 1 ) return;
       this.limitSubject.next(Number(val));
     });
-
-    this.renderSubject.watch((a, b) => {
+    /**
+     * @ko 등록된 subject에서 하나라도 이벤트가 발생하면 등록한 subscribe 발생
+     */
+    this.renderSubject.watch((idSubject, limitSubject) => {
       let stream = {}
-      stream['userData'] = a.getValue();
-      stream['listNum'] = b.getValue();
+      stream['userData'] = idSubject.getValue();
+      stream['listNum'] = limitSubject.getValue();
       this.renderSubject.next(stream);
     }, this.idSubject, this.limitSubject);
-
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {

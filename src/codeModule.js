@@ -1,7 +1,7 @@
 class CodeSnippet {
   constructor(){
-
   }
+
   qs(selector) {
     return document.querySelector(selector);
   }
@@ -28,10 +28,6 @@ class CodeSnippet {
     return ret;
   }
 
-  delegate() {
-
-  }
-
   fetchGet(uri) {
     return fetch(uri, {
       method: 'GET',
@@ -41,11 +37,16 @@ class CodeSnippet {
     .catch(err => { throw new Error(`error in fetchGet ${err}`)})
   }
 
+  /**
+   * @ko 일정시간 지연 후 함수콜, 만약 일정시간내에 콜이 일어나면 새로 콜이 일어난 시점부터 일정시간이 지나야 콜이 일어난다.
+   * @param { Function } func @Function to debounce
+   * @param { Number } wait delay time
+   * @param { Boolean } immediate 즉시 실행 여부
+   */
   debounce(func, wait = 500, immediate = false) {
   	let timeout;
-  	return function() {
+  	return function(...args) {
   		let context = this;
-      let args = arguments;
   		let later = function() {
   			timeout = null;
   			if (!immediate) func.apply(context, args);

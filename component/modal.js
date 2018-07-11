@@ -1,6 +1,14 @@
-import CodeSnippet from '../src/codeModule'
+import CodeSnippet from '../src/codeModule';
 
+/**
+ * @ko custom-item을 클릭 했을때 나타나는 modal component
+ */
 export default class CustomModal extends HTMLElement {
+  /**
+   * @ko 사용자에게 보여 줄 템플릿 생성
+   * @param { String } login user Id
+   * @param { string } avatar_url user's pic
+   */
   constructor(login, avatar_url) {
     super();
     this.login = login;
@@ -58,22 +66,33 @@ export default class CustomModal extends HTMLElement {
         </div>
       </div>
     `
-    this.callRepos(this.login).then((data) => {this.render(data, 5)});
   }
 
   connectedCallback() {
     this.attachShadow({mode: 'open'}).innerHTML = this.template;
     this.addEventListener('click', ({target}) => {target.remove()});
+    // 유저 깃 정보 렌더링
+    this.callRepos(this.login).then((data) => {this.render(data, 5)});
   }
 
-  async callRepos(username) {
+  /**
+   * GitHub API Call function
+   * @param { String } login user Id
+   * @return { Array<String> } user repo namelist
+   */
+  async callRepos(login) {
     let ret = [];
-    await CodeSnippet.fetchGet(`https://api.github.com/users/${username}/repos`)
+    await CodeSnippet.fetchGet(`https://api.github.com/users/${login}/repos`)
       .then((datas)=> CodeSnippet.map(datas, ({name}) => name))
       .then((arr) => { ret = [...arr] });
     return ret;
   }
 
+  /**
+   * render function
+   * @param { Array<String> } data user repo namelist
+   * @return { Number } limit Number of showing custom-item
+   */
   render(data, limit) {
     let less = (data.length < limit)? data.length:limit;
     if(!less) {less++; data.push('no result') }

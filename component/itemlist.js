@@ -2,6 +2,9 @@ import CodeSnippet from '../src/codeModule';
 import SimpleRx from '../src/SimpleRx';
 import CustomModal from './modal'
 
+/**
+ * @ko custom Item들을 포함하는 List Component
+ */
 class ItemList extends HTMLElement {
   constructor() {
     super();
@@ -25,12 +28,19 @@ class ItemList extends HTMLElement {
     this.innerHTML = this.template;
     this.renderRx.subscribe(this.render.bind(this, this.children));
 
+    // custom Item 클릭시 custom-modal 오픈
     this.addEventListener('click', ({target}) =>  {
       if(!!target.login)
       document.body.appendChild(new CustomModal(target.login, target.avatar_url))
     });
   }
 
+  /**
+   * @ko 입력받은 데이터로 뷰를 조작하는 함수
+   * @param { HTMLCollection } components custom-item set
+   * @param { Array<String> } userData list of user's pic
+   * @param { Number } listNum number of showing component
+   */
   render(componenets, {userData, listNum}) {
     let idx = 0;
     let noOneImg = `
