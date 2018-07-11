@@ -1,6 +1,13 @@
 import CodeSnippet from './codeModule';
 
+/**
+ * @ko 데이터 갱신을 이벤트로 핸들링 하기위한 모듈
+ */
 export default class SimpleRx {
+  /**
+   * @param { Any } val @ko 객체에 할당 할 값
+   * @return { Object } 사용자가 사용 할 API
+   */
   constructor(val) {
     this.val = val;
     this._handler = [];
@@ -19,7 +26,6 @@ export default class SimpleRx {
 
   next(val) {
     this.val = val;
-    // TODO: 메소드 -> 함수로 변경
     CodeSnippet.each(this._handler, (f) => {f(val)});
   }
 
