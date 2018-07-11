@@ -1,3 +1,7 @@
+import CodeSnippet from '../src/codeModule';
+import SimpleRx from '../src/SimpleRx';
+import CustomModal from './modal'
+
 class ItemList extends HTMLElement {
   constructor() {
     super();
@@ -36,7 +40,7 @@ class ItemList extends HTMLElement {
       height: 100vh;
     `
     this.parentElement.style = (!userData.length)? noOneImg:`background-image: none`;
-    each(componenets, (component) => {
+    CodeSnippet.each(componenets, (component) => {
       component.style = (listNum > idx && userData.length > idx)? 'display: block':'display: none';
       if (userData.length > idx) {
         component.setAttribute('avatar_url', userData[idx]['avatar_url']);

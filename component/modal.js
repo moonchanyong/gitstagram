@@ -1,4 +1,6 @@
-class CustomModal extends HTMLElement {
+import CodeSnippet from '../src/codeModule'
+
+export default class CustomModal extends HTMLElement {
   constructor(login, avatar_url) {
     super();
     this.login = login;
@@ -66,8 +68,8 @@ class CustomModal extends HTMLElement {
 
   async callRepos(username) {
     let ret = [];
-    await fetchGet(`https://api.github.com/users/${username}/repos`)
-      .then((datas)=> map(datas, ({name}) => name))
+    await CodeSnippet.fetchGet(`https://api.github.com/users/${username}/repos`)
+      .then((datas)=> CodeSnippet.map(datas, ({name}) => name))
       .then((arr) => { ret = [...arr] });
     return ret;
   }

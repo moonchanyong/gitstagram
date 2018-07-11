@@ -1,3 +1,6 @@
+import CodeSnippet from '../src/codeModule'
+import SimpleRx from '../src/SimpleRx';
+
 class CustomSerachBar extends HTMLElement {
   constructor() {
     super();
@@ -39,17 +42,17 @@ class CustomSerachBar extends HTMLElement {
     const $list_num_area = this.shadowRoot.querySelector('#list_num_area');
     let prevId = '';
 
-    $id_area.onkeyup = debounce(({target}) => {
+    $id_area.onkeyup = CodeSnippet.debounce(({target}) => {
       let val = $id_area.value;
       if(!val || prevId === val) return;
       prevId = val;
       let query = `${gitHubURI}?q=${val}&sort=followers&order=asc`;
-      fetchGet(query).then(({items}) => {
+      CodeSnippet.fetchGet(query).then(({items}) => {
         this.idSubject.next(items);
       });
     });
 
-    $list_num_area.onkeyup = debounce(({target}) => {
+    $list_num_area.onkeyup = CodeSnippet.debounce(({target}) => {
       let val = $list_num_area.value;
       if(!Number(val) || val > 10 || val < 1 ) return;
       this.limitSubject.next(Number(val));
