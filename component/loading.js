@@ -19,7 +19,7 @@ export default class Loading extends HTMLElement {
         display: none;
         position: absolute;
         animation-name: moving-packman;
-        animation-duration: 0.5s;
+        animation-duration: 0.3s;
         animation-iteration-count: initial;
 
       }
