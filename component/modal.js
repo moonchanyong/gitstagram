@@ -1,5 +1,5 @@
 import CodeSnippet from '../src/codeModule';
-
+import Loading from './loading';
 /**
  * @ko custom-item을 클릭 했을때 나타나는 modal component
  */
@@ -71,8 +71,10 @@ export default class CustomModal extends HTMLElement {
   connectedCallback() {
     this.attachShadow({mode: 'open'}).innerHTML = this.template;
     this.addEventListener('click', ({target}) => {target.remove()});
+
     // 유저 깃 정보 렌더링
-    this.callRepos(this.login).then((data) => {this.render(data, 5)});
+    this.callRepos(this.login).then((data) => {this.render(data, 5);});
+
   }
 
   /**

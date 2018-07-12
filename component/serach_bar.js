@@ -67,6 +67,7 @@ class CustomSerachBar extends HTMLElement {
      * @ko 등록된 subject에서 하나라도 이벤트가 발생하면 등록한 subscribe 발생
      */
     this.renderSubject.watch((idSubject, limitSubject) => {
+      if(!idSubject.getValue()) return;
       let stream = {}
       stream['userData'] = idSubject.getValue();
       stream['listNum'] = limitSubject.getValue();

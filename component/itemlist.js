@@ -31,8 +31,18 @@ class ItemList extends HTMLElement {
     // custom Item 클릭시 custom-modal 오픈
     this.addEventListener('click', ({target}) =>  {
       if(!!target.login)
-      document.body.appendChild(new CustomModal(target.login, target.avatar_url))
+      document.body.appendChild(new CustomModal(target.login, target.avatar_url));
     });
+
+    // child Element의 img가 다 로드 되었을때.
+    this.addEventListener('loaded', () =>  {
+      this.limit-=1;
+      if(!this.limit) this.callLoadComplete();
+    }, true);
+  }
+
+  callLoadComplete() {
+    document.dispatchEvent(new Event('loaded'));
   }
 
   /**
@@ -41,7 +51,10 @@ class ItemList extends HTMLElement {
    * @param { Array<String> } userData list of user's pic
    * @param { Number } listNum number of showing component
    */
-  render(componenets, {userData, listNum}) {
+  render(componenets, { userData, listNum }) {
+    let limit = (listNum >  userData.length)? userData.length:listNum;
+    this.loadedCount = limit;
+    if(!limit) this.callLoadComplete();
     let idx = 0;
     let noOneImg = `
       background-position: center;
@@ -51,13 +64,12 @@ class ItemList extends HTMLElement {
     `
     this.parentElement.style = (!userData.length)? noOneImg:`background-image: none`;
     CodeSnippet.each(componenets, (component) => {
-      component.style = (listNum > idx && userData.length > idx)? 'display: block':'display: none';
-      if (userData.length > idx) {
-        component.setAttribute('avatar_url', userData[idx]['avatar_url']);
-        component.setAttribute('login', userData[idx]['login']);
-      } else{
-        component.setAttribute('avatar_url', this.avatar_url);
-        component.setAttribute('login', 'No Result');
+      CodeSnippet.setAtt(component, 'avatar_url', undefined);
+      CodeSnippet.setAtt(component, 'login', undefined);
+      component.style = (limit > idx)? 'display: block':'display: none';
+      if (limit > idx) {
+        CodeSnippet.setAtt(component, 'avatar_url', userData[idx]['avatar_url']);
+        CodeSnippet.setAtt(component, 'login', userData[idx]['login']);
       }
       idx++;
     });

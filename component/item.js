@@ -5,18 +5,22 @@ class CustomItem extends HTMLElement {
   constructor() {
     super();
     // default image
+    this.default_image = 'assets/GitHub-Mark-32px.png';
     this.avatar_url = 'assets/GitHub-Mark-32px.png';
-
     /**
      * @ko 속성 변경시 update function set
      */
     this.update = {
       // avatar_url변경 시 child의 img를 바꾼다.
       avatar_url: (uri)=> {
-        this.shadowRoot.querySelector('img').setAttribute('src',  `${uri}`);
+        let renderPath = (uri == 'undefined' || !uri )? this.default_image: uri;
+        this.shadowRoot.querySelector('img').setAttribute('src',  `${renderPath}`);
       },
       // login: 유저아이디, 변경시 child의 p의 innerText 갱신
-      login: (txt) => { this.shadowRoot.querySelector('p').innerText = txt;},
+      login: (txt) => {
+        let renderName = (!txt)? '':txt;
+        this.shadowRoot.querySelector('p').innerText = renderName;
+      },
     };
     this.template = `
       <style>
@@ -46,7 +50,7 @@ class CustomItem extends HTMLElement {
         }
       </style>
       <div id="container">
-        <img src="${this.avatar_url}" alt="no image" class="inline" />
+        <img src="${this.default_image}" alt="no image" class="inline" />
         <p id="user-id" class="inline"></p>
       </div>
     `
@@ -60,6 +64,12 @@ class CustomItem extends HTMLElement {
 
   connectedCallback() {
     this.attachShadow({mode: 'open'}).innerHTML = this.template;
+
+    // img가 다 로드되면 부모 Element에게 로드완료 이벤트 보냄
+    this.shadowRoot.querySelector('img').addEventListener('load', () => {
+      if(this.avatar_url != 'undefined' && !!this.avatar_url)
+        this.parentElement.dispatchEvent(new Event('loaded'));
+    });
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {

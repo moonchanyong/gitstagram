@@ -43,7 +43,7 @@ class CodeSnippet {
    * @param { Number } wait delay time
    * @param { Boolean } immediate 즉시 실행 여부
    */
-  debounce(func, wait = 500, immediate = false) {
+  debounce(func, wait = 400, immediate = false) {
   	let timeout;
   	return function(...args) {
   		let context = this;
