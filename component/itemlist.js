@@ -22,6 +22,12 @@ class ItemList extends HTMLElement {
       <custom-item style="display: none"> </custom-item>
       <custom-item style="display: none"> </custom-item>
     `
+    this.noOneImg = `
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3TADqxBVbfLLSKFjp9GJGEHOAtAytI30bSoVHM2ZIVoWnY9WS4g");
+      height: 100vh;
+    `
   }
 
   connectedCallback() {
@@ -51,28 +57,23 @@ class ItemList extends HTMLElement {
    * @param { Array<String> } userData list of user's pic
    * @param { Number } listNum number of showing component
    */
-  render(componenets, { userData, listNum }) {
+  render(components, { userData, listNum }) {
+    let idx = 0;
     let limit = (listNum >  userData.length)? userData.length:listNum;
     this.loadedCount = limit;
     if(!limit) this.callLoadComplete();
-    let idx = 0;
-    let noOneImg = `
-      background-position: center;
-      background-repeat: no-repeat;
-      background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3TADqxBVbfLLSKFjp9GJGEHOAtAytI30bSoVHM2ZIVoWnY9WS4g");
-      height: 100vh;
-    `
-    this.parentElement.style = (!userData.length)? noOneImg:`background-image: none`;
-    CodeSnippet.each(componenets, (component) => {
-      CodeSnippet.setAtt(component, 'avatar_url', undefined);
-      CodeSnippet.setAtt(component, 'login', undefined);
-      component.style = (limit > idx)? 'display: block':'display: none';
+
+    this.parentElement.style = (!userData.length)? this.noOneImg:`background-image: none`;
+
+    for(let idx = 0; idx < components.length; idx+=1) {
+      CodeSnippet.setAtt(components[idx], 'avatar_url', undefined);
+      CodeSnippet.setAtt(components[idx], 'login', undefined);
+      components[idx].style = (limit > idx)? 'display: block':'display: none';
       if (limit > idx) {
-        CodeSnippet.setAtt(component, 'avatar_url', userData[idx]['avatar_url']);
-        CodeSnippet.setAtt(component, 'login', userData[idx]['login']);
+        CodeSnippet.setAtt(components[idx], 'avatar_url', userData[idx]['avatar_url']);
+        CodeSnippet.setAtt(components[idx], 'login', userData[idx]['login']);
       }
-      idx++;
-    });
+    }
   }
 }
 
