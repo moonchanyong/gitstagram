@@ -51,8 +51,7 @@ $$('custom-item').forEach((item) => item.remove())
 console.timeEnd()
 ```
 - display: none은 renderer Tree에서 제거 되긴 하지만, DOM자체는 없어지지 않아서 더 빠른 것 같다. 그리고 개수가 최대개수가 10개로 한정 되어있어서 메모리에도 이슈가 없을 것 같아서 css로 숨기는것이 나을 것 같다.(hidden도 display none이랑 시간 측면에서는 차이가 얼마 없었다.)
-<<<<<<< Updated upstream
-=======
+
 
 * 사용자 이미지 비동기적 로드
   + 체감성능 향상을 위한 UI가 필요하다.
@@ -64,4 +63,3 @@ console.timeEnd()
 
 
 ![before](https://oss.navercorp.com/chanyong-moon/gitstagram/blob/master/assets/before.gif?raw=true)
->>>>>>> Stashed changes
