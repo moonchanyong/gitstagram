@@ -19,6 +19,20 @@ export default class CustomModal extends HTMLElement {
     this.cors.innerText = 'CORS';
     this.template = `
       <style>
+        @keyframes spin {
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        .circle {
+          box-sizing: border-box;
+          width: 100px !important;
+          height: 100px !important;
+          border-radius: 100%;
+          border: 10px solid rgba(255, 255, 255, 0.2);
+          border-top-color: #FFF;
+          animation: spin 1s infinite linear;
+        }
         #border {
           position: fixed;
           top: 0;
@@ -88,7 +102,11 @@ export default class CustomModal extends HTMLElement {
     this.addEventListener('click', ({target}) => {target.remove()});
 
     // 유저 깃 정보 렌더링
-    this.callRepos(this.login).then((data) => {this.render(data, 5);});
+    this.shadowRoot.querySelector('#right-side').classList.add('circle');
+    this.callRepos(this.login).then((data) => {
+      this.render(data, 5);
+      this.shadowRoot.querySelector('#right-side').classList.remove('circle');
+    });
     this.calllawn(this.login).then(svg => {
       if(!!svg) {
         this.shadowRoot.querySelector('#border').appendChild(svg);
