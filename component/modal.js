@@ -27,6 +27,7 @@ export default class CustomModal extends HTMLElement {
           height: 500px;
           width: 1000px;
           display: block;
+          position: relative;
         }
         p {
           color: white;
@@ -74,7 +75,6 @@ export default class CustomModal extends HTMLElement {
 
     // 유저 깃 정보 렌더링
     this.callRepos(this.login).then((data) => {this.render(data, 5);});
-
   }
 
   /**
@@ -84,9 +84,23 @@ export default class CustomModal extends HTMLElement {
    */
   async callRepos(login) {
     let ret = [];
+
     await CodeSnippet.fetchGet(`https://api.github.com/users/${login}/repos`)
       .then((datas)=> CodeSnippet.map(datas, ({name}) => name))
       .then((arr) => { ret = [...arr] });
+    return ret;
+  }
+
+  /**
+   * GitHub API Call function
+   * @param { String } login user Id
+   * @return { HTMLElement } user's lawn
+   */
+  async calllawn(login) {
+    const parser = new DOMParser();
+    let ret;
+
+    await CodeSnippet.fetchRawGet(`https://github.com/${login}`);
     return ret;
   }
 

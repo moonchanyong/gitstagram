@@ -1,7 +1,7 @@
 /**
  * @ko 아이템 리스트 내의 아이템이 되는 컴포넌트, 깃헙 유저의 사진과 아이디 노출
  */
-class CustomItem extends HTMLElement {
+export default class CustomItem extends HTMLElement {
   constructor() {
     super();
     // default image
@@ -68,7 +68,7 @@ class CustomItem extends HTMLElement {
     // img가 다 로드되면 부모 Element에게 로드완료 이벤트 보냄
     this.shadowRoot.querySelector('img').addEventListener('load', () => {
       if(this.avatar_url != 'undefined' && !!this.avatar_url)
-        this.parentElement.dispatchEvent(new Event('loaded'));
+        document.dispatchEvent(new Event('loaded'));
     });
   }
 
