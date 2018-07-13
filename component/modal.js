@@ -13,6 +13,10 @@ export default class CustomModal extends HTMLElement {
     super();
     this.login = login;
     this.avatar_url = avatar_url;
+    this.noLawn = document.createElement('p');
+    this.noLawn.innerText = 'no Lawn';
+    this.cors = document.createElement('p');
+    this.cors.innerText = 'CORS';
     this.template = `
       <style>
         #border {
@@ -27,6 +31,7 @@ export default class CustomModal extends HTMLElement {
           height: 500px;
           width: 1000px;
           display: block;
+          position: relative;
         }
         p {
           color: white;
@@ -54,6 +59,16 @@ export default class CustomModal extends HTMLElement {
         #left-side {
           left:0
         }
+        svg {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: white;
+          padding: 10px;
+        }
+        #lawn {
+          background-color: white;
+        }
       </style>
       <div id="border">
         <div id="modal">
@@ -74,7 +89,15 @@ export default class CustomModal extends HTMLElement {
 
     // 유저 깃 정보 렌더링
     this.callRepos(this.login).then((data) => {this.render(data, 5);});
-
+    this.calllawn(this.login).then(svg => {
+      if(!!svg) {
+        this.shadowRoot.querySelector('#border').appendChild(svg);
+      } else {
+        this.shadowRoot.querySelector('#border').appendChild(this.noLawn);
+      }
+    }).catch(err => {
+      this.shadowRoot.querySelector('#border').appendChild(this.cors);
+    })
   }
 
   /**
@@ -84,9 +107,27 @@ export default class CustomModal extends HTMLElement {
    */
   async callRepos(login) {
     let ret = [];
+
     await CodeSnippet.fetchGet(`https://api.github.com/users/${login}/repos`)
       .then((datas)=> CodeSnippet.map(datas, ({name}) => name))
       .then((arr) => { ret = [...arr] });
+    return ret;
+  }
+
+  /**
+   * GitHub API Call function
+   * @param { String } login user Id
+   * @return { HTMLElement } user's lawn
+   */
+  async calllawn(login) {
+    const parser = new DOMParser();
+    let ret;
+
+    await CodeSnippet.fetchRawGet(`https://github.com/${login}`)
+      .then(rsp => rsp.text())
+      .then(txt => parser.parseFromString(txt, 'text/html'))
+      .then(dom => dom.querySelector('.js-calendar-graph-svg'))
+      .then((result) => {ret = result});
     return ret;
   }
 

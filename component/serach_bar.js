@@ -39,8 +39,8 @@ class CustomSerachBar extends HTMLElement {
   }
 
   connectedCallback() {
+
     this.attachShadow({mode: 'open'}).innerHTML = this.template;
-    const gitHubURI = 'https://api.github.com/search/users'
     const $id_area = this.shadowRoot.querySelector('#id_area');
     const $list_num_area = this.shadowRoot.querySelector('#list_num_area');
     let prevId = '';
@@ -53,23 +53,22 @@ class CustomSerachBar extends HTMLElement {
       let val = $id_area.value;
       if(!val || prevId === val) return;
       prevId = val;
-      let query = `${gitHubURI}?q=${val}&sort=followers&order=asc`;
-      CodeSnippet.fetchGet(query).then(({items}) => {
-        this.idSubject.next(items);
-      });
+      this.idSubject.next(val);
     });
+
     $list_num_area.onkeyup = CodeSnippet.debounce(({target}) => {
       let val = $list_num_area.value;
       if(!Number(val) || val > 10 || val < 1 ) return;
       this.limitSubject.next(Number(val));
     });
+
     /**
      * @ko 등록된 subject에서 하나라도 이벤트가 발생하면 등록한 subscribe 발생
      */
     this.renderSubject.watch((idSubject, limitSubject) => {
       if(!idSubject.getValue()) return;
       let stream = {}
-      stream['userData'] = idSubject.getValue();
+      stream['idValue'] = idSubject.getValue();
       stream['listNum'] = limitSubject.getValue();
       this.renderSubject.next(stream);
     }, this.idSubject, this.limitSubject);

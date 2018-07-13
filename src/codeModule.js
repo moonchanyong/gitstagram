@@ -22,6 +22,16 @@ class CodeSnippet {
     }
   }
 
+  pairEach(listA, listB, iter) {
+    let [lessList, logerList] = (listA > listB)? [listB, listA]: [listA, listB];
+    let idx = 0;
+    this.each(lessList, () => {
+      iter(listA[idx], listB[idx]);
+      idx++;
+    });
+
+  }
+
   map(list, mapper) {
     let ret = [];
     this.each(list, (item) => {ret.push(mapper(item))});
@@ -35,6 +45,14 @@ class CodeSnippet {
       cache: 'force-cache'
     }).then(response => response.json())
     .catch(err => { throw new Error(`error in fetchGet ${err}`)})
+  }
+
+  fetchRawGet(uri) {
+    return fetch(uri, {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'force-cache',
+    }).catch(err => { throw new Error(`error in fetchGet ${err}`)})
   }
 
   /**
