@@ -62,7 +62,7 @@ console.timeEnd()
   - Loading UI를 넣어서 시선을 훔쳐보았는데 근본문제는 해결되지 않는거 같다.
 
 * before
-![before](https://oss.navercorp.com/chanyong-moon/gitstagram/blob/master/assets/before.gif?raw=true)
+![before](https://github.com/moonchanyong/gitstagram/blob/master/assets/before.gif?raw=true)
 
 * after
-![before](https://oss.navercorp.com/chanyong-moon/gitstagram/blob/master/assets/after.gif?raw=true)
+![before](https://github.com/moonchanyong/gitstagram/blob/master/assets/after.gif?raw=true)
