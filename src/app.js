@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.addEventListener('loaded', loadedHandler);
       }
-
       itemList.setItem(limit);
       itemList.renderRx.next(userData);
     });
